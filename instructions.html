@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>座席表作成ツール 説明サイト</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <style>
+    body {
+      padding: 2rem;
+      font-family: "Helvetica Neue", sans-serif;
+    }
+    img {
+      border: 2px solid #ccc;
+      margin-bottom: 2rem;
+    }
+    .gif-img {
+      max-width: 500px;
+      width: 100%;
+      margin: 1rem auto;
+      display: block;
+    }
+    .explanation {
+      margin-top: 2rem;
+    }
+    .explanation li {
+      margin-bottom: 1rem;
+      line-height: 1.6;
+    }
+    .number {
+      font-weight: bold;
+      color: #d00;
+    }
+  </style>
+</head>
+<body>
+  <section class="section">
+    <div class="container">
+      <h1 class="title is-3 has-text-centered">座席表作成ツール 説明サイト</h1>
+
+      <div class="content has-text-centered">
+        <img src="説明.jpg" alt="座席表作成ツールの説明図" style="max-width: 1000px;">
+      </div>
+
+      <div class="explanation">
+        <ol>
+          <li><span class="number">① カウンター：</span> 追加する座席数を入力します（最大49席）。</li>
+          <li><span class="number">② 男子追加ボタン：</span> カウンターの数だけ男子座席を追加します。</li>
+          <img src="1.gif" alt="男子追加GIF" class="gif-img">
+          <li><span class="number">③ 女子追加ボタン：</span> カウンターの数だけ女子座席を追加します。</li>
+          <img src="2.gif" alt="女子追加GIF" class="gif-img">
+          <li><span class="number">④ 座席表をランダムにするボタン：</span> 指定席を除いて、男子と女子の座席番号をシャッフルします。</li>
+          <img src="5.gif" alt="ランダムGIF" class="gif-img">
+          <li><span class="number">⑤ 男子前席カウンター：</span> 男子の固定（前）席番号をカンマ区切りで入力できます（例: 1,3,5）。</li>
+          <img src="4.gif" alt="男子前席GIF" class="gif-img">
+          <li><span class="number">⑥ 女子前席カウンター：</span> 女子の固定（前）席番号をカンマ区切りで入力できます（例: 2,4,6）。</li>
+          <img src="6.gif" alt="女子前席GIF" class="gif-img">
+          <p>なお、固定席の番号はランダムにはなりません。</p>
+          <br><br>
+          <li><span class="number">⑦ 座席表本体：</span> 座席が表示されるエリアです。右クリックで固定席にも設定できます。また、ドラッグアンドドロップで移動ができます。</li>
+          <img src="3.gif" alt="座席表GIF" class="gif-img">
+        </ol>
+      </div>
+    </div>
+  </section>
+</body>
+</html>
