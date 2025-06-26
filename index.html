@@ -42,12 +42,12 @@
     }
 
     .special-male {
-      background-color: #f3d250 !important; /* 黄色 */
+      background-color: #f3d250 !important;
       font-weight: bold;
     }
 
     .special-female {
-      background-color: #b2e59e !important; /* 緑 */
+      background-color: #b2e59e !important;
       font-weight: bold;
     }
 
@@ -114,11 +114,10 @@
     function addSeats(count, gender) {
       const canvas = document.getElementById("canvas");
       const cols = Math.floor(canvas.clientWidth / gridSize);
-      const rows = Math.floor(canvas.clientHeight / gridSize);
       let existingSeats = canvas.querySelectorAll(".seat").length;
 
       for (let i = 0; i < count; i++) {
-        if (existingSeats + i >= cols * rows || existingSeats + i >= maxSeats) break;
+        if (existingSeats + i >= cols * cols || existingSeats + i >= maxSeats) break;
 
         const seatNumber = (gender === "female") ? femaleId++ : maleId++;
         const seat = document.createElement("div");
@@ -133,7 +132,6 @@
         seat.addEventListener("dragstart", dragStart);
         seat.addEventListener("dragend", dragEnd);
 
-        // 右クリックで固定に変更
         seat.addEventListener("contextmenu", (e) => {
           e.preventDefault();
           seat.dataset.fixed = "true";
@@ -216,48 +214,65 @@
       x = Math.max(0, Math.min(x, maxX));
       y = Math.max(0, Math.min(y, maxY));
 
-      seat.style.left = x + "px";
-      seat.style.top = y + "px";
+      // 座席と重なってるか判定
+      const allSeats = Array.from(document.querySelectorAll(".seat")).filter(s => s !== seat);
+      const overlappedSeat = allSeats.find(other =>
+        parseInt(other.style.left) === x && parseInt(other.style.top) === y
+      );
+
+      if (overlappedSeat) {
+        // 入れ替え
+        const tempLeft = seat.style.left;
+        const tempTop = seat.style.top;
+        seat.style.left = overlappedSeat.style.left;
+        seat.style.top = overlappedSeat.style.top;
+        overlappedSeat.style.left = tempLeft;
+        overlappedSeat.style.top = tempTop;
+      } else {
+        // 重なってなければそのまま移動
+        seat.style.left = x + "px";
+        seat.style.top = y + "px";
+      }
     }
 
-function shuffleSeatLabels() {
-  const allSeats = Array.from(document.querySelectorAll(".seat"));
+    function shuffleSeatLabels() {
+      const allSeats = Array.from(document.querySelectorAll(".seat"));
 
-  const maleFixedNums = new Set();
-  const femaleFixedNums = new Set();
+      const maleFixedNums = new Set();
+      const femaleFixedNums = new Set();
 
-  const maleFixed = allSeats.filter(seat => seat.dataset.gender === "male" && seat.dataset.fixed === "true");
-  const femaleFixed = allSeats.filter(seat => seat.dataset.gender === "female" && seat.dataset.fixed === "true");
+      const maleFixed = allSeats.filter(seat => seat.dataset.gender === "male" && seat.dataset.fixed === "true");
+      const femaleFixed = allSeats.filter(seat => seat.dataset.gender === "female" && seat.dataset.fixed === "true");
 
-  maleFixed.forEach(seat => maleFixedNums.add(Number(seat.dataset.originalNumber)));
-  femaleFixed.forEach(seat => femaleFixedNums.add(Number(seat.dataset.originalNumber)));
+      maleFixed.forEach(seat => maleFixedNums.add(Number(seat.dataset.originalNumber)));
+      femaleFixed.forEach(seat => femaleFixedNums.add(Number(seat.dataset.originalNumber)));
 
-  const maleSeats = allSeats.filter(seat => seat.dataset.gender === "male" && seat.dataset.fixed !== "true");
-  const femaleSeats = allSeats.filter(seat => seat.dataset.gender === "female" && seat.dataset.fixed !== "true");
+      const maleSeats = allSeats.filter(seat => seat.dataset.gender === "male" && seat.dataset.fixed !== "true");
+      const femaleSeats = allSeats.filter(seat => seat.dataset.gender === "female" && seat.dataset.fixed !== "true");
 
-  const maleNums = [];
-  const femaleNums = [];
+      const maleNums = [];
+      const femaleNums = [];
 
-  for (let i = 1; i <= maleSeats.length + maleFixedNums.size; i++) {
-    if (!maleFixedNums.has(i)) maleNums.push(i);
-  }
-  for (let i = 1; i <= femaleSeats.length + femaleFixedNums.size; i++) {
-    if (!femaleFixedNums.has(i)) femaleNums.push(i);
-  }
+      for (let i = 1; i <= maleSeats.length + maleFixedNums.size; i++) {
+        if (!maleFixedNums.has(i)) maleNums.push(i);
+      }
+      for (let i = 1; i <= femaleSeats.length + femaleFixedNums.size; i++) {
+        if (!femaleFixedNums.has(i)) femaleNums.push(i);
+      }
 
-  shuffleArray(maleNums);
-  shuffleArray(femaleNums);
+      shuffleArray(maleNums);
+      shuffleArray(femaleNums);
 
-  maleSeats.forEach((seat, i) => {
-    seat.dataset.originalNumber = maleNums[i];
-    seat.textContent = "座席" + maleNums[i];
-  });
+      maleSeats.forEach((seat, i) => {
+        seat.dataset.originalNumber = maleNums[i];
+        seat.textContent = "座席" + maleNums[i];
+      });
 
-  femaleSeats.forEach((seat, i) => {
-    seat.dataset.originalNumber = femaleNums[i];
-    seat.textContent = "座席" + femaleNums[i];
-  });
-}
+      femaleSeats.forEach((seat, i) => {
+        seat.dataset.originalNumber = femaleNums[i];
+        seat.textContent = "座席" + femaleNums[i];
+      });
+    }
 
     function shuffleArray(array) {
       for (let i = array.length - 1; i > 0; i--) {
